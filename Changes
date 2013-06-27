@@ -2,5 +2,8 @@ Revision history for Net-MPD
 
 {{$NEXT}}
 
+0.02  2013-06-27 11:20:24 MST
+  - Fixed dependencies
+
 0.01  2013-06-27 11:17:15 MST
-        - Initial release
+  - Initial release

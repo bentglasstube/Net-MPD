@@ -11,7 +11,7 @@ use Scalar::Util qw'looks_like_number';
 
 use 5.010;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =encoding utf-8
 
