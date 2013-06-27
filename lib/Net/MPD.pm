@@ -264,26 +264,47 @@ the items marked with an asterisk are writable.
 =over 4
 
 =item volume*
+
 =item repeat*
+
 =item random*
+
 =item single*
+
 =item consume*
+
 =item playlist
+
 =item playlist_length
+
 =item state
+
 =item song
+
 =item song_id
+
 =item next_song
+
 =item next_song_id
+
 =item time
+
 =item elapsed
+
 =item bitrate
+
 =item crossfade*
+
 =item mix_ramp_db*
+
 =item mix_ramp_delay*
+
 =item audio
+
 =item updating_db
+
 =item error
+
 =item replay_gain_mode*
 
 =back
@@ -338,76 +359,147 @@ renamed slightly.
 =over 4
 
 =item clear_error
+
 =item current_song
+
 =item idle
+
 =item stats
+
 =item next
+
 =item pause
+
 =item play
+
 =item play_id
+
 =item previous
+
 =item seek
+
 =item seek_id
+
 =item seek_cur
+
 =item stop
+
 =item add
+
 =item add_id
+
 =item clear
+
 =item delete
+
 =item delete_id
+
 =item move
+
 =item move_id
+
 =item playlist_find
+
 =item playlist_id
+
 =item playlist_info
+
 =item playlist_search
+
 =item plchanges
+
 =item plchangesposid
+
 =item prio
+
 =item prio_id
+
 =item shuffle
+
 =item swap
+
 =item swapid
+
 =item list_playlist
+
 =item list_playlist_info
+
 =item list_playlists
+
 =item load
+
 =item playlist_add
+
 =item playlist_clear
+
 =item playlist_delete
+
 =item playlist_move
+
 =item rename
+
 =item rm
+
 =item save
+
 =item count
+
 =item find
+
 =item find_add
+
 =item list
+
 =item list_all
+
 =item list_all_info
+
 =item ls_info
+
 =item search
+
 =item search_add
+
 =item search_add_pl
+
 =item update
+
 =item rescan
+
 =item sticker
+
 =item close
+
 =item kill
+
 =item ping
+
 =item disable_output
+
 =item enable_output
+
 =item outputs
+
 =item config
+
 =item commands
+
 =item not_commands
+
 =item tag_types
+
 =item url_handlers
+
 =item decoders
+
 =item subscribe
+
 =item unsubscribe
+
 =item channels
+
 =item read_messages
+
 =item send_message
 
 =back
