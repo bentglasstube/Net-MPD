@@ -1,5 +1,5 @@
 {
-   "abstract" : "Blah blah blah",
+   "abstract" : "Communicate with an MPD server",
    "author" : [
       "Alan Berndt <alan@eatabrick.org>"
    ],
@@ -46,6 +46,17 @@
       }
    },
    "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/bentglasstube/Net-MPD/issues"
+      },
+      "homepage" : "https://github.com/bentglasstube/Net-MPD",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/bentglasstube/Net-MPD.git",
+         "web" : "https://github.com/bentglasstube/Net-MPD"
+      }
+   },
    "version" : "0.01"
 }
 

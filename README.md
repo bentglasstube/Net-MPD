@@ -1,6 +1,6 @@
 # NAME
 
-Net::MPD - Blah blah blah
+Net::MPD - Communicate with an MPD server
 
 # SYNOPSIS
 
@@ -8,7 +8,7 @@ Net::MPD - Blah blah blah
 
 # DESCRIPTION
 
-Net::MPD is
+Net::MPD is awesome.
 
 # AUTHOR
 
@@ -16,7 +16,7 @@ Alan Berndt <alan@eatabrick.org>
 
 # COPYRIGHT
 
-Copyright 2013- Alan Berndt
+Copyright 2013 Alan Berndt
 
 # LICENSE
 
