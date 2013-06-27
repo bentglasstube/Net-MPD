@@ -13,6 +13,37 @@ use 5.010;
 
 our $VERSION = '0.01';
 
+=encoding utf-8
+
+=head1 NAME
+
+Net::MPD - Communicate with an MPD server
+
+=head1 SYNOPSIS
+
+  use Net::MPD;
+
+  my $mpd = Net::MPD->connect();
+
+  $mpd->stop();
+  $mpd->clear();
+  $mpd->search_add(Artist => 'David Bowie');
+  $mpd->shuffle();
+  $mpd->play();
+  $mpd->next();
+
+  while (1) {
+    my @changes = $mpd->idle();
+    print 'Changed: ' . join(', ', @changes) . "\n";
+  }
+
+=head1 DESCRIPTION
+
+Net::MPD is designed as a lightweight replacment for L<Audio::MPD> which
+depends on L<Moose> and is no longer maintained.
+
+=cut
+
 sub _connect {
   my ($self) = @_;
 
@@ -36,7 +67,7 @@ sub _connect {
     croak $result->message if $result->is_error;
   }
 
-  $self->_update_status();
+  $self->update_status();
 }
 
 sub _send {
@@ -77,16 +108,6 @@ sub _require {
   my ($self, $version) = @_;
   $version = qv($version);
   croak "Requires MPD version $version" if $version > $self->version;
-}
-
-sub _update_status {
-  my ($self) = @_;
-  my $result = $self->_send('status');
-  if ($result->is_error) {
-    warn $result->message;
-  } else {
-    $self->{status} = $result->make_hash;
-  }
 }
 
 sub _inject {
@@ -167,6 +188,108 @@ sub _command {
   });
 }
 
+=head1 METHODS
+
+=head2 connect
+
+=over 4
+
+=item Arguments: [$address]
+
+=back
+
+Connects to the MPD running at the given address.  Address takes the form of
+password@host:port.  Both the password and port are optional.  If no password
+is given, none will be used.  If no port is given, the default (6600) will be
+used.  If no host is given, C<localhost> will be used.
+
+Returns a Net::MPD object on success and croaks on failure.
+
+=cut
+
+sub connect {
+  my ($class, $address) = @_;
+
+  $address ||= 'localhost';
+
+  my ($pass, $host, $port) = ($address =~ /(?:([^@]+)@)?([^:]+)(?::(\d+))?/);
+
+  $port ||= 6600;
+
+  my $self = bless {
+    hostname => $host,
+    port     => $port,
+    password => $pass,
+  }, $class;
+
+  $self->_connect;
+
+  return $self;
+}
+
+=head2 version
+
+Returns the API version of the connected MPD server.
+
+=cut
+
+sub version {
+  my $self = shift;
+  return $self->{version};
+}
+
+=head2 update_status
+
+Issues a C<status> command to MPD and stores the results in the local object.
+The results are also returned as a hashref.
+
+=cut
+
+sub update_status {
+  my ($self) = @_;
+  my $result = $self->_send('status');
+  if ($result->is_error) {
+    warn $result->message;
+  } else {
+    $self->{status} = $result->make_hash;
+  }
+}
+
+=head1 MPD ATTRIBUTES
+
+Most of the "status" attributes have been written as combined getter/setter
+methods.  Calling the L</update_status> method will update these values.  Only
+the items marked with an asterisk are writable.
+
+=over 4
+
+=item volume*
+=item repeat*
+=item random*
+=item single*
+=item consume*
+=item playlist
+=item playlist_length
+=item state
+=item song
+=item song_id
+=item next_song
+=item next_song_id
+=item time
+=item elapsed
+=item bitrate
+=item crossfade*
+=item mix_ramp_db*
+=item mix_ramp_delay*
+=item audio
+=item updating_db
+=item error
+=item replay_gain_mode*
+
+=back
+
+=cut
+
 __PACKAGE__->_attribute('volume', command => 'setvol');
 __PACKAGE__->_attribute('repeat');
 __PACKAGE__->_attribute('random');
@@ -188,6 +311,108 @@ __PACKAGE__->_attribute('mix_ramp_delay');
 __PACKAGE__->_attribute('audio', readonly => 1);
 __PACKAGE__->_attribute('updating_db', key => 'updating_db', readonly => 1);
 __PACKAGE__->_attribute('error', readonly => 1);
+
+sub replay_gain_mode {
+  my $self = shift;
+
+  if (@_) {
+    my $result = $self->_send('replay_gain_mode', @_);
+    carp $result->message if $result->is_error;
+  }
+
+  my $result = $self->_send('replay_gain_status');
+  if ($result->is_error) {
+    carp $result->message;
+    return undef;
+  } else {
+    return $result->make_hash->{replay_gain_mode};
+  }
+}
+
+=head1 MPD COMMANDS
+
+The commands are mostly the same as the L<MPD
+protocol|http://www.musicpd.org/doc/protocol/index.html> but some have been
+renamed slightly.
+
+=over 4
+
+=item clear_error
+=item current_song
+=item idle
+=item stats
+=item next
+=item pause
+=item play
+=item play_id
+=item previous
+=item seek
+=item seek_id
+=item seek_cur
+=item stop
+=item add
+=item add_id
+=item clear
+=item delete
+=item delete_id
+=item move
+=item move_id
+=item playlist_find
+=item playlist_id
+=item playlist_info
+=item playlist_search
+=item plchanges
+=item plchangesposid
+=item prio
+=item prio_id
+=item shuffle
+=item swap
+=item swapid
+=item list_playlist
+=item list_playlist_info
+=item list_playlists
+=item load
+=item playlist_add
+=item playlist_clear
+=item playlist_delete
+=item playlist_move
+=item rename
+=item rm
+=item save
+=item count
+=item find
+=item find_add
+=item list
+=item list_all
+=item list_all_info
+=item ls_info
+=item search
+=item search_add
+=item search_add_pl
+=item update
+=item rescan
+=item sticker
+=item close
+=item kill
+=item ping
+=item disable_output
+=item enable_output
+=item outputs
+=item config
+=item commands
+=item not_commands
+=item tag_types
+=item url_handlers
+=item decoders
+=item subscribe
+=item unsubscribe
+=item channels
+=item read_messages
+=item send_message
+
+=back
+
+=cut
 
 __PACKAGE__->_command('clear_error');
 __PACKAGE__->_command('current_song');
@@ -262,64 +487,32 @@ __PACKAGE__->_command('channels');
 __PACKAGE__->_command('read_messages');
 __PACKAGE__->_command('send_message');
 
-sub connect {
-  my ($class, $address) = @_;
-
-  $address ||= 'localhost';
-
-  my ($pass, $host, $port) = ($address =~ /(?:([^@]+)@)?([^:]+)(?::(\d+))?/);
-
-  $port ||= 6600;
-
-  my $self = bless {
-    hostname => $host,
-    port     => $port,
-    password => $pass,
-  }, $class;
-
-  $self->_connect;
-
-  return $self;
-}
-
-sub version {
-  my $self = shift;
-  return $self->{version};
-}
-
-sub replay_gain_mode {
-  my $self = shift;
-
-  if (@_) {
-    my $result = $self->_send('replay_gain_mode', @_);
-    carp $result->message if $result->is_error;
-  }
-
-  my $result = $self->_send('replay_gain_status');
-  if ($result->is_error) {
-    carp $result->message;
-    return undef;
-  } else {
-    return $result->make_hash->{replay_gain_mode};
-  }
-}
-
 1;
-__END__
 
-=encoding utf-8
+=head1 TODO
 
-=head1 NAME
+=head2 Command Lists
 
-Net::MPD - Communicate with an MPD server
+MPD supports sending batches of commands but that is not yet available with this API.
 
-=head1 SYNOPSIS
+=head2 Asynchronous IO
 
-  use Net::MPD;
+Event-based handling of the idle command would make this module more robust.
 
-=head1 DESCRIPTION
+=head1 BUGS
 
-Net::MPD is awesome.
+=head2 Idle connections
+
+MPD will close the connection if left idle for too long.  This module will
+reconnect if it senses that this has occurred, but the first call after a
+disconnect will fail and have to be retried.  Calling the C<ping> command
+periodically will keep the connection open if you do not have any real commands
+to issue.  Calling the C<idle> command will block until something interesting
+happens.
+
+=head2 Reporting
+
+Report any issues on L<GitHub|https://github.com/bentglasstube/Net-MPD/issues>
 
 =head1 AUTHOR
 
@@ -335,5 +528,7 @@ This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =head1 SEE ALSO
+
+L<Audio::MPD>, L<MPD Protocol|http://www.musicpd.org/doc/protocol/index.html>
 
 =cut
