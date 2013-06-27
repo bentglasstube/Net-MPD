@@ -406,9 +406,9 @@ renamed slightly.
 
 =item playlist_search
 
-=item plchanges
+=item playlist_changes
 
-=item plchangesposid
+=item playlist_changes_pos_id
 
 =item prio
 

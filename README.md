@@ -105,8 +105,8 @@ renamed slightly.
 - playlist\_id
 - playlist\_info
 - playlist\_search
-- plchanges
-- plchangesposid
+- playlist\_changes
+- playlist\_changes\_pos\_id
 - prio
 - prio\_id
 - shuffle
