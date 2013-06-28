@@ -2,6 +2,10 @@ Revision history for Net-MPD
 
 {{$NEXT}}
 
+0.03  2013-06-28 14:08:04 MST
+  - Improve sticker API
+  - Improved result parsing
+
 0.02  2013-06-27 11:20:24 MST
   - Fixed dependencies
 
