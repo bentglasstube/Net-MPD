@@ -27,9 +27,7 @@ depends on [Moose](http://search.cpan.org/perldoc?Moose) and is no longer mainta
 
 # METHODS
 
-## connect
-
-- Arguments: \[$address\]
+## connect \[$address\]
 
 Connect to the MPD running at the given address.  Address takes the form of
 password@host:port.  Both the password and port are optional.  If no password is

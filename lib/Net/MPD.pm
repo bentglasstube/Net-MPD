@@ -195,13 +195,7 @@ sub _command {
 
 =head1 METHODS
 
-=head2 connect
-
-=over 4
-
-=item Arguments: [$address]
-
-=back
+=head2 connect [$address]
 
 Connect to the MPD running at the given address.  Address takes the form of
 password@host:port.  Both the password and port are optional.  If no password is
