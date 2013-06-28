@@ -203,12 +203,12 @@ sub _command {
 
 =back
 
-Connects to the MPD running at the given address.  Address takes the form of
-password@host:port.  Both the password and port are optional.  If no password
-is given, none will be used.  If no port is given, the default (6600) will be
-used.  If no host is given, C<localhost> will be used.
+Connect to the MPD running at the given address.  Address takes the form of
+password@host:port.  Both the password and port are optional.  If no password is
+given, none will be used.  If no port is given, the default (6600) will be used.
+If no host is given, C<localhost> will be used.
 
-Returns a Net::MPD object on success and croaks on failure.
+Return a Net::MPD object on success and croaks on failure.
 
 =cut
 
@@ -234,7 +234,7 @@ sub connect {
 
 =head2 version
 
-Returns the API version of the connected MPD server.
+Return the API version of the connected MPD server.
 
 =cut
 
@@ -245,7 +245,7 @@ sub version {
 
 =head2 update_status
 
-Issues a C<status> command to MPD and stores the results in the local object.
+Issue a C<status> command to MPD and stores the results in the local object.
 The results are also returned as a hashref.
 
 =cut
@@ -365,147 +365,368 @@ renamed slightly.
 
 =item clear_error
 
+Clear the current error message in status.  This can also be done by issuing any
+command that starts playback.
+
 =item current_song
 
-=item idle
+Return the song info for the current song.
 
-=item stats
+=item idle [@subsystems]
 
-=item next
+Block until a noteworth change in one or more of MPD's subsystems.  As soon as
+there is one, a list of all changed subsystems will be returned.  If any
+subsystems are given as arguments, only those subsystems will be monitored.  The
+following subsystems are available:
 
-=item pause
+=over 4
 
-=item play
+=item database
 
-=item play_id
+The song database has been changed after an update.
 
-=item previous
+=item udpate
 
-=item seek
+A database update has started or finished.
 
-=item seek_id
+=item stored_playlist
 
-=item seek_cur
+A stored playlist has been modified.
 
-=item stop
+=item playlist
 
-=item add
+The current playlist has been modified.
 
-=item add_id
+=item player
 
-=item clear
+Playback has been started stopped or seeked.
 
-=item delete
+=item mixer
 
-=item delete_id
+The volume has been adjusted.
 
-=item move
+=item output
 
-=item move_id
-
-=item playlist_find
-
-=item playlist_id
-
-=item playlist_info
-
-=item playlist_search
-
-=item playlist_changes
-
-=item playlist_changes_pos_id
-
-=item prio
-
-=item prio_id
-
-=item shuffle
-
-=item swap
-
-=item swapid
-
-=item list_playlist
-
-=item list_playlist_info
-
-=item list_playlists
-
-=item load
-
-=item playlist_add
-
-=item playlist_clear
-
-=item playlist_delete
-
-=item playlist_move
-
-=item rename
-
-=item rm
-
-=item save
-
-=item count
-
-=item find
-
-=item find_add
-
-=item list
-
-=item list_all
-
-=item list_all_info
-
-=item ls_info
-
-=item search
-
-=item search_add
-
-=item search_add_pl
-
-=item update
-
-=item rescan
+An audio output has been enabled or disabled.
 
 =item sticker
 
+The sticket database has been modified.
+
+=item subscription
+
+A client has subscribed or unsubscribed from a channel.
+
+=item message
+
+A message was received on a channel this client is watching.
+
+=back
+
+=item stats
+
+Return a hashref with some stats about the database.
+
+=item next
+
+Play the next song in the playlist.
+
+=item pause $state
+
+Set the pause state.  Use 0 for playing and 1 for paused.
+
+=item play [$position]
+
+Start playback (optionally at the given position).
+
+=item play_id [$id]
+
+Start playback (optionally with the given song).
+
+=item previous
+
+Play the previous song in the playlist.
+
+=item seek $position $time
+
+Seek to $time seconds in the given song position.
+
+=item seek_id $id $time
+
+Seek to $time seconds in the given song.
+
+=item seek_cur $time
+
+Seek to $time seconds in the current song.
+
+=item stop
+
+Stop playing.
+
+=item add $path
+
+Add the file (or directory, recursively) at $path to the current playlist.
+
+=item add_id $path [$position]
+
+Add the file at $path (optionally at $position) to the playlist and return the
+id.
+
+=item clear
+
+Clear the current playlist.
+
+=item delete $position
+
+Remove the song(s) in the given position from the current playlist.
+
+=item delete_id $id
+
+Remove the song with the given id from the current playlist.
+
+=item move $from $to
+
+Move the song from position $from to $to.
+
+=item move_id $id $to
+
+Move the song with the given id to position $to.
+
+=item playlist_find $tag $search
+
+Search the current playlist for songs with $tag exactly matching $search.
+
+=item playlist_id $id
+
+Return song information for the song with the given id.
+
+=item playlist_info [$position]
+
+Return song information for every song in the current playlist (or optionally
+the one at the given position).
+
+=item playlist_search $tag $search
+
+Search the current playlist for songs with $tag partially matching $search.
+
+=item playlist_changes $version
+
+Return song information for songs changed since the given version of the current
+playlist.
+
+=item playlist_changes_pos_id $version
+
+Return position and id information for songs changed since the given version of
+the current playlist.
+
+=item prio $priority $position
+
+Set the priority of the song at the given position.
+
+=item prio_id $priority $id
+
+Set the priority of the song with the given id.
+
+=item shuffle
+
+Shuffle the current playlist.
+
+=item swap $pos1 $pos2
+
+Swap the positions of the songs at the given positions.
+
+=item swapid $id1 $id2
+
+Swap the positions of the songs with the given ids.
+
+=item list_playlist $name
+
+Return a list of all the songs in the named playlist.
+
+=item list_playlist_info $name
+
+Return all the song information for the named playlist.
+
+=item list_playlists
+
+Return a list of the stored playlists.
+
+=item load $name
+
+Add the named playlist to the current playlist.
+
+=item playlist_add $name $path
+
+Add the given path to the named playlist.
+
+=item playlist_clear $name
+
+Clear the named playlist.
+
+=item playlist_delete $name $position
+
+Remove the song at the given position from the named playlist.
+
+=item playlist_move $name $id $pos
+
+Move the song with the given id to the given position in the named playlist.
+
+=item rename $name $new_name
+
+Rename the named playlist to $new_name.
+
+=item rm $name
+
+Delete the named playlist.
+
+=item save $name
+
+Save the current playlist with the given name.
+
+=item count $tag $search ...
+
+Return a count and playtime for all items with $tag exactly matching $search.
+Multiple pairs of $tag/$search parameters can be given.
+
+=item find $tag $search ...
+
+Return song information for all items with $tag exactly matching $search.  The
+special tag 'any' can be used to search all tag.  The special tag 'file' can be
+used to search by path.
+
+=item find_add $tag $search
+
+Search as with C<find> and add any matches to the current playlist.
+
+=item list $tag [$artist]
+
+Return all the values for the given tag.  If the tag is 'album', an artist can
+optionally be given to further limit the results.
+
+=item list_all [$path]
+
+Return a list of all the songs and directories (optionally under $path).
+
+=item list_all_info [$path]
+
+Return a list of all the songs as with C<listall> but include metadata.
+
+=item search $tag $search ...
+
+As C<find> but with partial, case-insensitive searching.
+
+=item search_add $tag $search ...
+
+As C<search> but adds the results to the current playlist.
+
+=item search_add_pl $name $tag $search ...
+
+As C<search> but adds the results the named playlist.
+
+=item update [$path]
+
+Update the database (optionally under $path) and return a job id.
+
+=item rescan [$path]
+
+As <update> but forces rescan of unmodified files.
+
+=item sticker $command ...
+
+B<Note:> This API is likely to change to make it easier to use.
+
+Issue one of the following sticker commands:
+
+=over 4
+
+=item get $type $path $name
+
+Return the sticker value for the given item.
+
+=item set $type $path $name $value
+
+Set the sticker value for the given item.
+
+=item delete $type $path [$name]
+
+Delete the sticker values for the given item (or optionally just the named one).
+
+=item list $type $path
+
+List all the stickers for the given item.
+
+=item find $type $path $name
+
+List all the items under $path with a sticker of the given name.
+
+=back
+
 =item close
+
+Close the connection.  This is pretty worthless as the library will just
+reconnect for the next command.
 
 =item kill
 
+Kill the MPD server.
+
 =item ping
 
-=item disable_output
+Do nothing.  This can be used to keep an idle connection open.  If you want to
+wait for noteworthy events, the C<idle> command is better suited.
 
-=item enable_output
+=item disable_output $id
+
+Disable the given output.
+
+=item enable_output $id
+
+Enable the given output.
 
 =item outputs
 
-=item config
+Return a list of the available outputs.
 
 =item commands
 
+Return a list of the available commands.
+
 =item not_commands
+
+Return a list of the unavailable commands.
 
 =item tag_types
 
+Return a list of all the avalable song metadata.
+
 =item url_handlers
+
+Return a list of available url handlers.
 
 =item decoders
 
-=item subscribe
+Return a list of available decoder plugins, along with the MIME types and file
+extensions associated with them.
 
-=item unsubscribe
+=item subscribe $channel
+
+Subscribe to the named channel.
+
+=item unsubscribe $channel
+
+Unsubscribe from the named channel.
 
 =item channels
 
+Return a list of the channels with active clients.
+
 =item read_messages
 
-=item send_message
+Return a list of any available messages for this clients subscribed channels.
+
+=item send_message $channel $message
+
+Send a message to the given channel.
 
 =back
 
