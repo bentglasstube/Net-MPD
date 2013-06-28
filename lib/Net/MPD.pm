@@ -355,18 +355,16 @@ The commands are mostly the same as the L<MPD
 protocol|http://www.musicpd.org/doc/protocol/index.html> but some have been
 renamed slightly.
 
-=over 4
-
-=item clear_error
+=head2 clear_error
 
 Clear the current error message in status.  This can also be done by issuing any
 command that starts playback.
 
-=item current_song
+=head2 current_song
 
 Return the song info for the current song.
 
-=item idle [@subsystems]
+=head2 idle [@subsystems]
 
 Block until a noteworth change in one or more of MPD's subsystems.  As soon as
 there is one, a list of all changed subsystems will be returned.  If any
@@ -417,215 +415,215 @@ A message was received on a channel this client is watching.
 
 =back
 
-=item stats
+=head2 stats
 
 Return a hashref with some stats about the database.
 
-=item next
+=head2 next
 
 Play the next song in the playlist.
 
-=item pause $state
+=head2 pause $state
 
 Set the pause state.  Use 0 for playing and 1 for paused.
 
-=item play [$position]
+=head2 play [$position]
 
 Start playback (optionally at the given position).
 
-=item play_id [$id]
+=head2 play_id [$id]
 
 Start playback (optionally with the given song).
 
-=item previous
+=head2 previous
 
 Play the previous song in the playlist.
 
-=item seek $position $time
+=head2 seek $position $time
 
 Seek to $time seconds in the given song position.
 
-=item seek_id $id $time
+=head2 seek_id $id $time
 
 Seek to $time seconds in the given song.
 
-=item seek_cur $time
+=head2 seek_cur $time
 
 Seek to $time seconds in the current song.
 
-=item stop
+=head2 stop
 
 Stop playing.
 
-=item add $path
+=head2 add $path
 
 Add the file (or directory, recursively) at $path to the current playlist.
 
-=item add_id $path [$position]
+=head2 add_id $path [$position]
 
 Add the file at $path (optionally at $position) to the playlist and return the
 id.
 
-=item clear
+=head2 clear
 
 Clear the current playlist.
 
-=item delete $position
+=head2 delete $position
 
 Remove the song(s) in the given position from the current playlist.
 
-=item delete_id $id
+=head2 delete_id $id
 
 Remove the song with the given id from the current playlist.
 
-=item move $from $to
+=head2 move $from $to
 
 Move the song from position $from to $to.
 
-=item move_id $id $to
+=head2 move_id $id $to
 
 Move the song with the given id to position $to.
 
-=item playlist_find $tag $search
+=head2 playlist_find $tag $search
 
 Search the current playlist for songs with $tag exactly matching $search.
 
-=item playlist_id $id
+=head2 playlist_id $id
 
 Return song information for the song with the given id.
 
-=item playlist_info [$position]
+=head2 playlist_info [$position]
 
 Return song information for every song in the current playlist (or optionally
 the one at the given position).
 
-=item playlist_search $tag $search
+=head2 playlist_search $tag $search
 
 Search the current playlist for songs with $tag partially matching $search.
 
-=item playlist_changes $version
+=head2 playlist_changes $version
 
 Return song information for songs changed since the given version of the current
 playlist.
 
-=item playlist_changes_pos_id $version
+=head2 playlist_changes_pos_id $version
 
 Return position and id information for songs changed since the given version of
 the current playlist.
 
-=item prio $priority $position
+=head2 prio $priority $position
 
 Set the priority of the song at the given position.
 
-=item prio_id $priority $id
+=head2 prio_id $priority $id
 
 Set the priority of the song with the given id.
 
-=item shuffle
+=head2 shuffle
 
 Shuffle the current playlist.
 
-=item swap $pos1 $pos2
+=head2 swap $pos1 $pos2
 
 Swap the positions of the songs at the given positions.
 
-=item swapid $id1 $id2
+=head2 swapid $id1 $id2
 
 Swap the positions of the songs with the given ids.
 
-=item list_playlist $name
+=head2 list_playlist $name
 
 Return a list of all the songs in the named playlist.
 
-=item list_playlist_info $name
+=head2 list_playlist_info $name
 
 Return all the song information for the named playlist.
 
-=item list_playlists
+=head2 list_playlists
 
 Return a list of the stored playlists.
 
-=item load $name
+=head2 load $name
 
 Add the named playlist to the current playlist.
 
-=item playlist_add $name $path
+=head2 playlist_add $name $path
 
 Add the given path to the named playlist.
 
-=item playlist_clear $name
+=head2 playlist_clear $name
 
 Clear the named playlist.
 
-=item playlist_delete $name $position
+=head2 playlist_delete $name $position
 
 Remove the song at the given position from the named playlist.
 
-=item playlist_move $name $id $pos
+=head2 playlist_move $name $id $pos
 
 Move the song with the given id to the given position in the named playlist.
 
-=item rename $name $new_name
+=head2 rename $name $new_name
 
 Rename the named playlist to $new_name.
 
-=item rm $name
+=head2 rm $name
 
 Delete the named playlist.
 
-=item save $name
+=head2 save $name
 
 Save the current playlist with the given name.
 
-=item count $tag $search ...
+=head2 count $tag $search ...
 
 Return a count and playtime for all items with $tag exactly matching $search.
 Multiple pairs of $tag/$search parameters can be given.
 
-=item find $tag $search ...
+=head2 find $tag $search ...
 
 Return song information for all items with $tag exactly matching $search.  The
 special tag 'any' can be used to search all tag.  The special tag 'file' can be
 used to search by path.
 
-=item find_add $tag $search
+=head2 find_add $tag $search
 
 Search as with C<find> and add any matches to the current playlist.
 
-=item list $tag [$artist]
+=head2 list $tag [$artist]
 
 Return all the values for the given tag.  If the tag is 'album', an artist can
 optionally be given to further limit the results.
 
-=item list_all [$path]
+=head2 list_all [$path]
 
 Return a list of all the songs and directories (optionally under $path).
 
-=item list_all_info [$path]
+=head2 list_all_info [$path]
 
 Return a list of all the songs as with C<listall> but include metadata.
 
-=item search $tag $search ...
+=head2 search $tag $search ...
 
 As C<find> but with partial, case-insensitive searching.
 
-=item search_add $tag $search ...
+=head2 search_add $tag $search ...
 
 As C<search> but adds the results to the current playlist.
 
-=item search_add_pl $name $tag $search ...
+=head2 search_add_pl $name $tag $search ...
 
 As C<search> but adds the results the named playlist.
 
-=item update [$path]
+=head2 update [$path]
 
 Update the database (optionally under $path) and return a job id.
 
-=item rescan [$path]
+=head2 rescan [$path]
 
 As <update> but forces rescan of unmodified files.
 
-=item sticker $command ...
+=head2 sticker $command ...
 
 B<Note:> This API is likely to change to make it easier to use.
 
@@ -655,70 +653,70 @@ List all the items under $path with a sticker of the given name.
 
 =back
 
-=item close
+=head2 close
 
 Close the connection.  This is pretty worthless as the library will just
 reconnect for the next command.
 
-=item kill
+=head2 kill
 
 Kill the MPD server.
 
-=item ping
+=head2 ping
 
 Do nothing.  This can be used to keep an idle connection open.  If you want to
 wait for noteworthy events, the C<idle> command is better suited.
 
-=item disable_output $id
+=head2 disable_output $id
 
 Disable the given output.
 
-=item enable_output $id
+=head2 enable_output $id
 
 Enable the given output.
 
-=item outputs
+=head2 outputs
 
 Return a list of the available outputs.
 
-=item commands
+=head2 commands
 
 Return a list of the available commands.
 
-=item not_commands
+=head2 not_commands
 
 Return a list of the unavailable commands.
 
-=item tag_types
+=head2 tag_types
 
 Return a list of all the avalable song metadata.
 
-=item url_handlers
+=head2 url_handlers
 
 Return a list of available url handlers.
 
-=item decoders
+=head2 decoders
 
 Return a list of available decoder plugins, along with the MIME types and file
 extensions associated with them.
 
-=item subscribe $channel
+=head2 subscribe $channel
 
 Subscribe to the named channel.
 
-=item unsubscribe $channel
+=head2 unsubscribe $channel
 
 Unsubscribe from the named channel.
 
-=item channels
+=head2 channels
 
 Return a list of the channels with active clients.
 
-=item read_messages
+=head2 read_messages
 
 Return a list of any available messages for this clients subscribed channels.
 
-=item send_message $channel $message
+=head2 send_message $channel $message
 
 Send a message to the given channel.
 

@@ -79,362 +79,362 @@ the items marked with an asterisk are writable.
 The commands are mostly the same as the [MPD protocol](http://www.musicpd.org/doc/protocol/index.html) but some have been
 renamed slightly.
 
-- clear\_error
+## clear\_error
 
-    Clear the current error message in status.  This can also be done by issuing any
-    command that starts playback.
+Clear the current error message in status.  This can also be done by issuing any
+command that starts playback.
 
-- current\_song
+## current\_song
 
-    Return the song info for the current song.
+Return the song info for the current song.
 
-- idle \[@subsystems\]
+## idle \[@subsystems\]
 
-    Block until a noteworth change in one or more of MPD's subsystems.  As soon as
-    there is one, a list of all changed subsystems will be returned.  If any
-    subsystems are given as arguments, only those subsystems will be monitored.  The
-    following subsystems are available:
+Block until a noteworth change in one or more of MPD's subsystems.  As soon as
+there is one, a list of all changed subsystems will be returned.  If any
+subsystems are given as arguments, only those subsystems will be monitored.  The
+following subsystems are available:
 
-    - database
+- database
 
-        The song database has been changed after an update.
+    The song database has been changed after an update.
 
-    - udpate
+- udpate
 
-        A database update has started or finished.
+    A database update has started or finished.
 
-    - stored\_playlist
+- stored\_playlist
 
-        A stored playlist has been modified.
+    A stored playlist has been modified.
 
-    - playlist
+- playlist
 
-        The current playlist has been modified.
+    The current playlist has been modified.
 
-    - player
+- player
 
-        Playback has been started stopped or seeked.
+    Playback has been started stopped or seeked.
 
-    - mixer
+- mixer
 
-        The volume has been adjusted.
+    The volume has been adjusted.
 
-    - output
+- output
 
-        An audio output has been enabled or disabled.
+    An audio output has been enabled or disabled.
 
-    - sticker
+- sticker
 
-        The sticket database has been modified.
+    The sticket database has been modified.
 
-    - subscription
+- subscription
 
-        A client has subscribed or unsubscribed from a channel.
+    A client has subscribed or unsubscribed from a channel.
 
-    - message
+- message
 
-        A message was received on a channel this client is watching.
+    A message was received on a channel this client is watching.
 
-- stats
+## stats
 
-    Return a hashref with some stats about the database.
+Return a hashref with some stats about the database.
 
-- next
+## next
 
-    Play the next song in the playlist.
+Play the next song in the playlist.
 
-- pause $state
+## pause $state
 
-    Set the pause state.  Use 0 for playing and 1 for paused.
+Set the pause state.  Use 0 for playing and 1 for paused.
 
-- play \[$position\]
+## play \[$position\]
 
-    Start playback (optionally at the given position).
+Start playback (optionally at the given position).
 
-- play\_id \[$id\]
+## play\_id \[$id\]
 
-    Start playback (optionally with the given song).
+Start playback (optionally with the given song).
 
-- previous
+## previous
 
-    Play the previous song in the playlist.
+Play the previous song in the playlist.
 
-- seek $position $time
+## seek $position $time
 
-    Seek to $time seconds in the given song position.
+Seek to $time seconds in the given song position.
 
-- seek\_id $id $time
+## seek\_id $id $time
 
-    Seek to $time seconds in the given song.
+Seek to $time seconds in the given song.
 
-- seek\_cur $time
+## seek\_cur $time
 
-    Seek to $time seconds in the current song.
+Seek to $time seconds in the current song.
 
-- stop
+## stop
 
-    Stop playing.
+Stop playing.
 
-- add $path
+## add $path
 
-    Add the file (or directory, recursively) at $path to the current playlist.
+Add the file (or directory, recursively) at $path to the current playlist.
 
-- add\_id $path \[$position\]
+## add\_id $path \[$position\]
 
-    Add the file at $path (optionally at $position) to the playlist and return the
-    id.
+Add the file at $path (optionally at $position) to the playlist and return the
+id.
 
-- clear
+## clear
 
-    Clear the current playlist.
+Clear the current playlist.
 
-- delete $position
+## delete $position
 
-    Remove the song(s) in the given position from the current playlist.
+Remove the song(s) in the given position from the current playlist.
 
-- delete\_id $id
+## delete\_id $id
 
-    Remove the song with the given id from the current playlist.
+Remove the song with the given id from the current playlist.
 
-- move $from $to
+## move $from $to
 
-    Move the song from position $from to $to.
+Move the song from position $from to $to.
 
-- move\_id $id $to
+## move\_id $id $to
 
-    Move the song with the given id to position $to.
+Move the song with the given id to position $to.
 
-- playlist\_find $tag $search
+## playlist\_find $tag $search
 
-    Search the current playlist for songs with $tag exactly matching $search.
+Search the current playlist for songs with $tag exactly matching $search.
 
-- playlist\_id $id
+## playlist\_id $id
 
-    Return song information for the song with the given id.
+Return song information for the song with the given id.
 
-- playlist\_info \[$position\]
+## playlist\_info \[$position\]
 
-    Return song information for every song in the current playlist (or optionally
-    the one at the given position).
+Return song information for every song in the current playlist (or optionally
+the one at the given position).
 
-- playlist\_search $tag $search
+## playlist\_search $tag $search
 
-    Search the current playlist for songs with $tag partially matching $search.
+Search the current playlist for songs with $tag partially matching $search.
 
-- playlist\_changes $version
+## playlist\_changes $version
 
-    Return song information for songs changed since the given version of the current
-    playlist.
+Return song information for songs changed since the given version of the current
+playlist.
 
-- playlist\_changes\_pos\_id $version
+## playlist\_changes\_pos\_id $version
 
-    Return position and id information for songs changed since the given version of
-    the current playlist.
+Return position and id information for songs changed since the given version of
+the current playlist.
 
-- prio $priority $position
+## prio $priority $position
 
-    Set the priority of the song at the given position.
+Set the priority of the song at the given position.
 
-- prio\_id $priority $id
+## prio\_id $priority $id
 
-    Set the priority of the song with the given id.
+Set the priority of the song with the given id.
 
-- shuffle
+## shuffle
 
-    Shuffle the current playlist.
+Shuffle the current playlist.
 
-- swap $pos1 $pos2
+## swap $pos1 $pos2
 
-    Swap the positions of the songs at the given positions.
+Swap the positions of the songs at the given positions.
 
-- swapid $id1 $id2
+## swapid $id1 $id2
 
-    Swap the positions of the songs with the given ids.
+Swap the positions of the songs with the given ids.
 
-- list\_playlist $name
+## list\_playlist $name
 
-    Return a list of all the songs in the named playlist.
+Return a list of all the songs in the named playlist.
 
-- list\_playlist\_info $name
+## list\_playlist\_info $name
 
-    Return all the song information for the named playlist.
+Return all the song information for the named playlist.
 
-- list\_playlists
+## list\_playlists
 
-    Return a list of the stored playlists.
+Return a list of the stored playlists.
 
-- load $name
+## load $name
 
-    Add the named playlist to the current playlist.
+Add the named playlist to the current playlist.
 
-- playlist\_add $name $path
+## playlist\_add $name $path
 
-    Add the given path to the named playlist.
+Add the given path to the named playlist.
 
-- playlist\_clear $name
+## playlist\_clear $name
 
-    Clear the named playlist.
+Clear the named playlist.
 
-- playlist\_delete $name $position
+## playlist\_delete $name $position
 
-    Remove the song at the given position from the named playlist.
+Remove the song at the given position from the named playlist.
 
-- playlist\_move $name $id $pos
+## playlist\_move $name $id $pos
 
-    Move the song with the given id to the given position in the named playlist.
+Move the song with the given id to the given position in the named playlist.
 
-- rename $name $new\_name
+## rename $name $new\_name
 
-    Rename the named playlist to $new\_name.
+Rename the named playlist to $new\_name.
 
-- rm $name
+## rm $name
 
-    Delete the named playlist.
+Delete the named playlist.
 
-- save $name
+## save $name
 
-    Save the current playlist with the given name.
+Save the current playlist with the given name.
 
-- count $tag $search ...
+## count $tag $search ...
 
-    Return a count and playtime for all items with $tag exactly matching $search.
-    Multiple pairs of $tag/$search parameters can be given.
+Return a count and playtime for all items with $tag exactly matching $search.
+Multiple pairs of $tag/$search parameters can be given.
 
-- find $tag $search ...
+## find $tag $search ...
 
-    Return song information for all items with $tag exactly matching $search.  The
-    special tag 'any' can be used to search all tag.  The special tag 'file' can be
-    used to search by path.
+Return song information for all items with $tag exactly matching $search.  The
+special tag 'any' can be used to search all tag.  The special tag 'file' can be
+used to search by path.
 
-- find\_add $tag $search
+## find\_add $tag $search
 
-    Search as with `find` and add any matches to the current playlist.
+Search as with `find` and add any matches to the current playlist.
 
-- list $tag \[$artist\]
+## list $tag \[$artist\]
 
-    Return all the values for the given tag.  If the tag is 'album', an artist can
-    optionally be given to further limit the results.
+Return all the values for the given tag.  If the tag is 'album', an artist can
+optionally be given to further limit the results.
 
-- list\_all \[$path\]
+## list\_all \[$path\]
 
-    Return a list of all the songs and directories (optionally under $path).
+Return a list of all the songs and directories (optionally under $path).
 
-- list\_all\_info \[$path\]
+## list\_all\_info \[$path\]
 
-    Return a list of all the songs as with `listall` but include metadata.
+Return a list of all the songs as with `listall` but include metadata.
 
-- search $tag $search ...
+## search $tag $search ...
 
-    As `find` but with partial, case-insensitive searching.
+As `find` but with partial, case-insensitive searching.
 
-- search\_add $tag $search ...
+## search\_add $tag $search ...
 
-    As `search` but adds the results to the current playlist.
+As `search` but adds the results to the current playlist.
 
-- search\_add\_pl $name $tag $search ...
+## search\_add\_pl $name $tag $search ...
 
-    As `search` but adds the results the named playlist.
+As `search` but adds the results the named playlist.
 
-- update \[$path\]
+## update \[$path\]
 
-    Update the database (optionally under $path) and return a job id.
+Update the database (optionally under $path) and return a job id.
 
-- rescan \[$path\]
+## rescan \[$path\]
 
-    As <update> but forces rescan of unmodified files.
+As <update> but forces rescan of unmodified files.
 
-- sticker $command ...
+## sticker $command ...
 
-    __Note:__ This API is likely to change to make it easier to use.
+__Note:__ This API is likely to change to make it easier to use.
 
-    Issue one of the following sticker commands:
+Issue one of the following sticker commands:
 
-    - get $type $path $name
+- get $type $path $name
 
-        Return the sticker value for the given item.
+    Return the sticker value for the given item.
 
-    - set $type $path $name $value
+- set $type $path $name $value
 
-        Set the sticker value for the given item.
+    Set the sticker value for the given item.
 
-    - delete $type $path \[$name\]
+- delete $type $path \[$name\]
 
-        Delete the sticker values for the given item (or optionally just the named one).
+    Delete the sticker values for the given item (or optionally just the named one).
 
-    - list $type $path
+- list $type $path
 
-        List all the stickers for the given item.
+    List all the stickers for the given item.
 
-    - find $type $path $name
+- find $type $path $name
 
-        List all the items under $path with a sticker of the given name.
+    List all the items under $path with a sticker of the given name.
 
-- close
+## close
 
-    Close the connection.  This is pretty worthless as the library will just
-    reconnect for the next command.
+Close the connection.  This is pretty worthless as the library will just
+reconnect for the next command.
 
-- kill
+## kill
 
-    Kill the MPD server.
+Kill the MPD server.
 
-- ping
+## ping
 
-    Do nothing.  This can be used to keep an idle connection open.  If you want to
-    wait for noteworthy events, the `idle` command is better suited.
+Do nothing.  This can be used to keep an idle connection open.  If you want to
+wait for noteworthy events, the `idle` command is better suited.
 
-- disable\_output $id
+## disable\_output $id
 
-    Disable the given output.
+Disable the given output.
 
-- enable\_output $id
+## enable\_output $id
 
-    Enable the given output.
+Enable the given output.
 
-- outputs
+## outputs
 
-    Return a list of the available outputs.
+Return a list of the available outputs.
 
-- commands
+## commands
 
-    Return a list of the available commands.
+Return a list of the available commands.
 
-- not\_commands
+## not\_commands
 
-    Return a list of the unavailable commands.
+Return a list of the unavailable commands.
 
-- tag\_types
+## tag\_types
 
-    Return a list of all the avalable song metadata.
+Return a list of all the avalable song metadata.
 
-- url\_handlers
+## url\_handlers
 
-    Return a list of available url handlers.
+Return a list of available url handlers.
 
-- decoders
+## decoders
 
-    Return a list of available decoder plugins, along with the MIME types and file
-    extensions associated with them.
+Return a list of available decoder plugins, along with the MIME types and file
+extensions associated with them.
 
-- subscribe $channel
+## subscribe $channel
 
-    Subscribe to the named channel.
+Subscribe to the named channel.
 
-- unsubscribe $channel
+## unsubscribe $channel
 
-    Unsubscribe from the named channel.
+Unsubscribe from the named channel.
 
-- channels
+## channels
 
-    Return a list of the channels with active clients.
+Return a list of the channels with active clients.
 
-- read\_messages
+## read\_messages
 
-    Return a list of any available messages for this clients subscribed channels.
+Return a list of any available messages for this clients subscribed channels.
 
-- send\_message $channel $message
+## send\_message $channel $message
 
-    Send a message to the given channel.
+Send a message to the given channel.
 
 # TODO
 
