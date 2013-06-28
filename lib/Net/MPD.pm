@@ -75,12 +75,8 @@ sub _send {
 
   my $string = "$command";
   foreach my $arg (@args) {
-    if ($arg =~ /[\s"]/) {
-      $arg =~ s/"/\\"/g;
-      $string .= qq{ "$arg"};
-    } else {
-      $string .= qq{ $arg};
-    }
+    $arg =~ s/"/\\"/g;
+    $string .= qq{ "$arg"};
   }
   $string .= "\n";
 
@@ -155,6 +151,25 @@ sub _attribute {
   });
 }
 
+my $default_parser = sub {
+  my $result = shift;
+
+  my @items = ();
+  my $item = {};
+  foreach my $line ($result->lines) {
+    my ($key, $value) = split /: /, $line, 2;
+    if (exists $item->{$key}) {
+      push @items, 2 > keys %$item ? values %$item : $item;
+      $item = {};
+    }
+    $item->{$key} = $value;
+  }
+
+  push @items, 2 > keys %$item ? values %$item : $item;
+
+  return wantarray ? @items : $items[0];
+};
+
 sub _command {
   my ($class, $name, %options) = @_;
 
@@ -162,24 +177,7 @@ sub _command {
 
   $options{command} //= $normal_name;
   $options{args}    //= [];
-  $options{parser}  //= sub {
-    my $result = shift;
-
-    my @items = ();
-    my $item = {};
-    foreach my $line ($result->lines) {
-      my ($key, $value) = split /: /, $line, 2;
-      if (exists $item->{$key}) {
-        push @items, 2 > keys %$item ? values %$item : $item;
-        $item = {};
-      }
-      $item->{$key} = $value;
-    }
-
-    push @items, 2 > keys %$item ? values %$item : $item;
-
-    return wantarray ? @items : $items[0];
-  };
+  $options{parser}  //= $default_parser;
 
   $class->_inject($name => sub {
     my $self = shift;
@@ -623,35 +621,85 @@ Update the database (optionally under $path) and return a job id.
 
 As <update> but forces rescan of unmodified files.
 
-=head2 sticker $command ...
+=head2 sticker_value $type $path $name [$value]
 
-B<Note:> This API is likely to change to make it easier to use.
+Return the sticker value for the given item after optionally setting it to
+$value.  Use an undefined value to delete the sticker.
 
-Issue one of the following sticker commands:
+=cut
 
-=over 4
+sub sticker_value {
+  my ($self, $type, $path, $name, $value) = @_;
 
-=item get $type $path $name
+  if (@_ > 4) {
+    if (defined $value) {
+      my $result = $self->_send('sticker', 'set', $type, $path, $name, $value);
+      carp $result->message and return undef if $result->is_error;
+      return $value;
+    } else {
+      my $result = $self->_send('sticker', 'delete', $type, $path, $name);
+      carp $result->message if $result->is_error;
+      return undef;
+    }
+  } else {
+    my $result = $self->_send('sticker', 'get', $type, $path, $name);
+    carp $result->message and return undef if $result->is_error;
 
-Return the sticker value for the given item.
+    my ($line) = $result->lines;
+    my ($val) = ($line =~ /^sticker: \Q$name\E=(.*)$/);
+    return $val;
+  }
+}
 
-=item set $type $path $name $value
+=head2 sticker_list $type $path
 
-Set the sticker value for the given item.
+Return a hashref of the stickers for the given item.
 
-=item delete $type $path [$name]
+=cut
 
-Delete the sticker values for the given item (or optionally just the named one).
+sub sticker_list {
+  my ($self, $type, $path) = @_;
 
-=item list $type $path
+  my $result = $self->_send('sticker', 'list', $type, $path);
+  carp $result->message and return undef if $result->is_error;
 
-List all the stickers for the given item.
+  my $stickers = {};
+  foreach my $line ($result->lines) {
+    my ($key, $value) = ($line =~ /^sticker: (.*)=(.*)$/);
+    $stickers->{$key} = $value;
+  }
 
-=item find $type $path $name
+  return $stickers;
+}
 
-List all the items under $path with a sticker of the given name.
+=head2 sticker_find $type $name [$path]
 
-=back
+Return a list of all the items (optionally under $path) with a sticker of the given name.
+
+=cut
+
+sub sticker_find {
+  my ($self, $type, $name, $path) = @_;
+  $path //= '';
+
+  my $result = $self->_send('sticker', 'find', $type, $path, $name);
+  carp $result->message and return undef if $result->is_error;
+
+  my @items = ();
+  my $file = '';
+
+  foreach my $line ($result->lines) {
+    my ($key, $value) = split /: /, $line, 2;
+    if ($key eq 'file') {
+      $file = $value;
+    } elsif ($key eq 'sticker') {
+      my ($val) = ($value =~ /^\Q$name\E=(.*)$/);
+      push @items, { file => $file, sticker => $val };
+    }
+  }
+
+  return @items;
+}
 
 =head2 close
 
@@ -818,7 +866,7 @@ __PACKAGE__->_command('search_add');
 __PACKAGE__->_command('search_add_pl');
 __PACKAGE__->_command('update');
 __PACKAGE__->_command('rescan');
-__PACKAGE__->_command('sticker'); # TODO improve api
+__PACKAGE__->_command('sticker');
 __PACKAGE__->_command('close');
 __PACKAGE__->_command('kill');
 __PACKAGE__->_command('ping');

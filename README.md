@@ -343,31 +343,18 @@ Update the database (optionally under $path) and return a job id.
 
 As <update> but forces rescan of unmodified files.
 
-## sticker $command ...
+## sticker\_value $type $path $name \[$value\]
 
-__Note:__ This API is likely to change to make it easier to use.
+Return the sticker value for the given item after optionally setting it to
+$value.  Use an undefined value to delete the sticker.
 
-Issue one of the following sticker commands:
+## sticker\_list $type $path
 
-- get $type $path $name
+Return a hashref of the stickers for the given item.
 
-    Return the sticker value for the given item.
+## sticker\_find $type $name \[$path\]
 
-- set $type $path $name $value
-
-    Set the sticker value for the given item.
-
-- delete $type $path \[$name\]
-
-    Delete the sticker values for the given item (or optionally just the named one).
-
-- list $type $path
-
-    List all the stickers for the given item.
-
-- find $type $path $name
-
-    List all the items under $path with a sticker of the given name.
+Return a list of all the items (optionally under $path) with a sticker of the given name.
 
 ## close
 
