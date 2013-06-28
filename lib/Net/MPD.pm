@@ -162,6 +162,24 @@ sub _command {
 
   $options{command} //= $normal_name;
   $options{args}    //= [];
+  $options{parser}  //= sub {
+    my $result = shift;
+
+    my @items = ();
+    my $item = {};
+    foreach my $line ($result->lines) {
+      my ($key, $value) = split /: /, $line, 2;
+      if (exists $item->{$key}) {
+        push @items, 2 > keys %$item ? values %$item : $item;
+        $item = {};
+      }
+      $item->{$key} = $value;
+    }
+
+    push @items, 2 > keys %$item ? values %$item : $item;
+
+    return wantarray ? @items : $items[0];
+  };
 
   $class->_inject($name => sub {
     my $self = shift;
@@ -170,20 +188,7 @@ sub _command {
       carp $result->message;
       return undef;
     } else {
-      my @items = ();
-      my $item = {};
-      foreach my $line ($result->lines) {
-        my ($key, $value) = split /: /, $line, 2;
-        if (exists $item->{$key}) {
-          push @items, 2 > keys %$item ? values %$item : $item;
-          $item = {};
-        }
-        $item->{$key} = $value;
-      }
-
-      push @items, 2 > keys %$item ? values %$item : $item;
-
-      return 2 > @items ? $items[0] : @items;
+      return $options{parser}->($result);
     }
   });
 }
@@ -506,8 +511,48 @@ renamed slightly.
 
 =cut
 
+my $song_parser = sub {
+  my $result = shift;
+
+  my @songs = ();
+  my $song = {};
+
+  foreach my $line ($result->lines) {
+    my ($key, $value) = split /: /, $line, 2;
+
+    if ($key =~ /^(?:file|directory|playlist)$/) {
+      push @songs, $song if exists $song->{type};
+      $song = { type => $key, uri => $value };
+    } else {
+      $song->{$key} = $value;
+    }
+  }
+
+  return @songs, $song;
+};
+
+my $decoder_parser = sub {
+  my $result = shift;
+
+  my @plugins = ();
+  my $plugin = {};
+
+  foreach my $line ($result->lines) {
+    my ($key, $value) = split /: /, $line, 2;
+
+    if ($key eq 'plugin') {
+      push @plugins, $plugin if exists $plugin->{name};
+      $plugin = { name => $value };
+    } else {
+      push @{$plugin->{$key}}, $value;
+    }
+  }
+
+  return @plugins, $plugin;
+};
+
 __PACKAGE__->_command('clear_error');
-__PACKAGE__->_command('current_song');
+__PACKAGE__->_command('current_song', parser => $song_parser);
 __PACKAGE__->_command('idle');
 __PACKAGE__->_command('stats');
 __PACKAGE__->_command('next');
@@ -526,19 +571,19 @@ __PACKAGE__->_command('delete');
 __PACKAGE__->_command('delete_id');
 __PACKAGE__->_command('move');
 __PACKAGE__->_command('move_id');
-__PACKAGE__->_command('playlist_find');
-__PACKAGE__->_command('playlist_id');
-__PACKAGE__->_command('playlist_info');
-__PACKAGE__->_command('playlist_search');
-__PACKAGE__->_command('playlist_changes', command => 'plchanges');
+__PACKAGE__->_command('playlist_find', parser => $song_parser);
+__PACKAGE__->_command('playlist_id', parser => $song_parser);
+__PACKAGE__->_command('playlist_info', parser => $song_parser);
+__PACKAGE__->_command('playlist_search', parser => $song_parser);
+__PACKAGE__->_command('playlist_changes', command => 'plchanges', parser => $song_parser);
 __PACKAGE__->_command('playlist_changes_pos_id', command => 'plchangesposid');
 __PACKAGE__->_command('prio');
 __PACKAGE__->_command('prio_id');
 __PACKAGE__->_command('shuffle');
 __PACKAGE__->_command('swap');
 __PACKAGE__->_command('swapid');
-__PACKAGE__->_command('list_playlist');
-__PACKAGE__->_command('list_playlist_info');
+__PACKAGE__->_command('list_playlist', parser => $song_parser);
+__PACKAGE__->_command('list_playlist_info', parser => $song_parser);
 __PACKAGE__->_command('list_playlists');
 __PACKAGE__->_command('load');
 __PACKAGE__->_command('playlist_add');
@@ -549,18 +594,18 @@ __PACKAGE__->_command('rename');
 __PACKAGE__->_command('rm');
 __PACKAGE__->_command('save');
 __PACKAGE__->_command('count');
-__PACKAGE__->_command('find');
+__PACKAGE__->_command('find', parser => $song_parser);
 __PACKAGE__->_command('find_add');
 __PACKAGE__->_command('list');
-__PACKAGE__->_command('list_all');
-__PACKAGE__->_command('list_all_info');
-__PACKAGE__->_command('ls_info');
-__PACKAGE__->_command('search');
+__PACKAGE__->_command('list_all', parser => $song_parser);
+__PACKAGE__->_command('list_all_info', parser => $song_parser);
+__PACKAGE__->_command('ls_info', parser => $song_parser);
+__PACKAGE__->_command('search', parser => $song_parser);
 __PACKAGE__->_command('search_add');
 __PACKAGE__->_command('search_add_pl');
 __PACKAGE__->_command('update');
 __PACKAGE__->_command('rescan');
-__PACKAGE__->_command('sticker');
+__PACKAGE__->_command('sticker'); # TODO improve api
 __PACKAGE__->_command('close');
 __PACKAGE__->_command('kill');
 __PACKAGE__->_command('ping');
@@ -572,7 +617,7 @@ __PACKAGE__->_command('commands');
 __PACKAGE__->_command('not_commands');
 __PACKAGE__->_command('tag_types');
 __PACKAGE__->_command('url_handlers');
-__PACKAGE__->_command('decoders');
+__PACKAGE__->_command('decoders', parser => $decoder_parser);
 __PACKAGE__->_command('subscribe');
 __PACKAGE__->_command('unsubscribe');
 __PACKAGE__->_command('channels');
