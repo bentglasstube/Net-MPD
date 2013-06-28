@@ -768,8 +768,6 @@ Return a list of any available messages for this clients subscribed channels.
 
 Send a message to the given channel.
 
-=back
-
 =cut
 
 my $song_parser = sub {
