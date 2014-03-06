@@ -44,6 +44,10 @@ depends on L<Moose> and is no longer maintained.
 
 =cut
 
+sub _debug {
+  say STDERR @_ if $ENV{NET_MPD_DEBUG};
+}
+
 sub _connect {
   my ($self) = @_;
 
@@ -81,9 +85,13 @@ sub _send {
   $string .= "\n";
 
   # auto reconnect
-  $self->_connect() if not $self->{socket}->connected;
+  unless ($self->{socket}->connected) {
+    $self->_connect();
+    _debug '# Reconnecting';
+  }
 
   $self->{socket}->print($string);
+  _debug "> $string";
 
   my @lines = ();
 
@@ -91,6 +99,7 @@ sub _send {
     my $line = $self->{socket}->getline;
     croak "Error reading line from socket" if not defined $line;
     chomp $line;
+    _debug "< $line";
 
     if ($line =~ /^OK$|^ACK /) {
       return Net::MPD::Response->new($line, @lines);
