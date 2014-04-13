@@ -2,6 +2,9 @@ Revision history for Net-MPD
 
 {{$NEXT}}
 
+0.04  2014-04-13 07:38:34 MST
+  - Remove dependency on eatabrick radio for testing
+
 0.03  2013-06-28 14:08:04 MST
   - Improve sticker API
   - Improved result parsing
