@@ -2,6 +2,9 @@ Revision history for Net-MPD
 
 {{$NEXT}}
 
+0.05  2014-04-21 15:52:23 MST
+  - Change to MIT License
+
 0.04  2014-04-13 07:38:34 MST
   - Remove dependency on eatabrick radio for testing
 
