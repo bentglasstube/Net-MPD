@@ -10,7 +10,7 @@ sub new {
     lines    => [ @lines ],
   };
 
-  if (my @args = $response =~ /^ACK \[(\d+)@(\d+)\] {(\w*)} (.*)$/) {
+  if (my @args = $response =~ /^ACK \[(\d+)@(\d+)\] \{(\w*)\} (.*)$/) {
     $self->{error}   = $args[0];
     $self->{line}    = $args[1];
     $self->{command} = $args[2];
