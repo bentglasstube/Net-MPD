@@ -2,6 +2,9 @@ Revision history for Net-MPD
 
 {{$NEXT}}
 
+0.06  2016-09-05 08:44:37 PDT
+  - Escape curly braces in regex
+
 0.05  2014-04-21 15:52:23 MST
   - Change to MIT License
 

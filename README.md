@@ -22,8 +22,8 @@ Net::MPD - Communicate with an MPD server
 
 # DESCRIPTION
 
-Net::MPD is designed as a lightweight replacment for [Audio::MPD](http://search.cpan.org/perldoc?Audio::MPD) which
-depends on [Moose](http://search.cpan.org/perldoc?Moose) and is no longer maintained.
+Net::MPD is designed as a lightweight replacment for [Audio::MPD](https://metacpan.org/pod/Audio::MPD) which
+depends on [Moose](https://metacpan.org/pod/Moose) and is no longer maintained.
 
 # METHODS
 
@@ -48,7 +48,7 @@ The results are also returned as a hashref.
 # MPD ATTRIBUTES
 
 Most of the "status" attributes have been written as combined getter/setter
-methods.  Calling the ["update\_status"](#update\_status) method will update these values.  Only
+methods.  Calling the ["update\_status"](#update_status) method will update these values.  Only
 the items marked with an asterisk are writable.
 
 - volume\*
@@ -76,7 +76,8 @@ the items marked with an asterisk are writable.
 
 # MPD COMMANDS
 
-The commands are mostly the same as the [MPD protocol](http://www.musicpd.org/doc/protocol/index.html) but some have been
+The commands are mostly the same as the [MPD
+protocol](http://www.musicpd.org/doc/protocol/index.html) but some have been
 renamed slightly.
 
 ## clear\_error
@@ -341,7 +342,7 @@ Update the database (optionally under $path) and return a job id.
 
 ## rescan \[$path\]
 
-As <update> but forces rescan of unmodified files.
+As &lt;update> but forces rescan of unmodified files.
 
 ## sticker\_value $type $path $name \[$value\]
 
@@ -478,4 +479,4 @@ SOFTWARE.
 
 # SEE ALSO
 
-[Audio::MPD](http://search.cpan.org/perldoc?Audio::MPD), [MPD Protocol](http://www.musicpd.org/doc/protocol/index.html)
+[Audio::MPD](https://metacpan.org/pod/Audio::MPD), [MPD Protocol](http://www.musicpd.org/doc/protocol/index.html)
